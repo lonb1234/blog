@@ -1,4 +1,3 @@
-
 // safety check before delete & confirmation of checked values to prevent error.
 function deleteCheck() {
   var checked = document.querySelectorAll('input:checked');

@@ -1,95 +1,118 @@
-
-.header{
- height:90%;
- width:100%;
+/* general */
+body{
+  background-color: #F2F0D8;
+  color:#8C6B4D;
 }
 
-.school{
-  height:40%;
-  width:100%;
-}
-.header{
-  height:50%;
+.bg-light {
+  background-color: #F2F0D8;
 }
 
-.img-fluid {
-  max-width: 100%;
-  height: auto;
+.content {
+  margin: 7% 24% 4% 18%;
+  background-color: #F2F0D8;
 }
 
-.intro{
+.school {
+height:auto;
+  width: 100%;
+}
+
+/* intro text */
+.intro {
   text-align: center;
   font-size: 25px;
 }
 
-
-.navbar3{
-position: sticky;
-top:0;
+.smaller{
+  font-size: 14px;
 }
 
-
-.content{
-  margin: 7% 24% 4% 18%;
-  background-color:white;
-
-}
-.content2{
-  font-family:"roboto";
-  font-size:20px;
+.smallerhome{
+  font-size:28px;
 }
 
-.title{
-  font-family:"motserrat";
-  font-size:35px;
-  font-weight:bolder;
-}
-
-.navbar-brand{
-  font-family:"Montserrat";
-  font-weight:  bolder;
-letter-spacing:1px;
-  color:#f0f5f9;
-  font-size:27px
-}
-.bg-light{
-  background-color:#c9d6df;
-}
-.nav-item{
-  font-family:"Montserrat";
-  color:#f0f5f9;
-  font-size:20px;
-}
-
-.navbar-custom{
-  background-color:#52616b;
-      opacity:0.98;
-  color:#f0f5f9;
-}
-
-
-.foot{
-
-  padding: 1.2% 0 1.2% 0;
-  text-align: center;
-  background-color:#c9d6df;
-  color:white;
-}
-
-
-.delete{
-font-size:90px;
-  color:red;
+.title {
+  font-family: "Montserrat";
+  font-size: 50px;
   font-weight: bolder;
 }
 
+#title2 {
+  font-family: "Montserrat";
+  font-size: 35px;
+  font-weight: bolder;
+color:#8C6B4D;
+}
 
-.posttype{
+/* navbar */
+.navbar-custom {
+  background-color: #8C0F26;
+  opacity: 0.98;
+}
+
+.navbar3 {
+  position: sticky;
+  top: 0;
+}
+
+.navbar-custom .navbar-brand{
+  font-family: "Montserrat";
+  font-weight: bolder;
+  letter-spacing: 1px;
+  font-size: 27px;
+  color: #BF8F84;
+}
+
+.navbar-custom .navbar-brand:hover{
+  color: #F2F0D8;
+}
+.navbar-custom .navbar-nav .nav-link {
+  color: #BF8F84;
+  font-family: "Montserrat";
+    font-size: 20px;
+}
+
+.navbar-custom .navbar-nav .nav-link:hover{
+  color: #F2F0D8;
+}
+
+
+/* footer */
+.foot {
+  padding: 1.2% 0 1.2% 0;
+  text-align: center;
+  background-color: #8C6B4D;
+    color:#F2F0D8;
+}
+
+
+/* posts */
+.delete {
+  font-size: 90px;
+  color: #8C0F26;
+  font-weight: bolder;
+}
+
+.posttype {
   font-weight: lighter;
-  color:gray;
+  color: #8C3B0B;
   font-size: 22px;
 }
 
-input[type=checkbox]:checked + label{
+.content2 {
+  font-family: "roboto";
+  font-size: 20px;
+}
+
+a:link {
+  color: #BF8F84;
+}
+
+a:visited {
+  color: #BF8F84;
+}
+
+input[type=checkbox]:checked+label {
   text-decoration: line-through;
 }
