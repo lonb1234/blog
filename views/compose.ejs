@@ -18,7 +18,24 @@
     <br><br>
     <label>Bericht</label>
     <br>
-    <textarea class="form-control" name="postBody" rows="22" cols="170"></textarea>
+    <!-- <textarea class="form-control" name="postBody" rows="22" cols="170"></textarea>
+
+
+
+    <!-- Include Editor style. -->
+  <link href="https://cdn.jsdelivr.net/npm/froala-editor@latest/css/froala_editor.pkgd.min.css" rel="stylesheet" type="text/css" />
+
+  <!-- Create a tag that we will use as the editable area. -->
+  <!-- You can use a div tag as well. -->
+  <textarea class="form-control" name="postBody" rows="22" cols="170"></textarea>
+
+  <!-- Include Editor JS files. -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/froala-editor@latest/js/froala_editor.pkgd.min.js"></script>
+
+  <!-- Initialize the editor. -->
+  <script>
+    new FroalaEditor('textarea');
+  </script>
   </div>
   <button class="btn btn-primary" type="submit" name="button">Opslaan</button>
 

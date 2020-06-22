@@ -8,14 +8,18 @@
 
 
 <%  posts.forEach(function(post){ %>
-
+    <input type="checkbox" name="checkbox" value="<%=post._id%>">
+<label for="checkbox">
 <h1><%=post.title%></h1>
+</label>
 <h4 class="posttype"><%=post.type%></h4>
 <p>
   <%=post.content.substring(0, 100) + " ..."%>
   <a href="/posts/<%=post._id%>">Verder lezen</a>
-  <input type="checkbox" name="checkbox" value="<%=post._id%>">
+
 </p>
+<br >
+<br >
 
 
 <% }) %>

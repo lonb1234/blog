@@ -3,23 +3,79 @@ const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const mongoose = require('mongoose');
 var nl2br  = require('nl2br');
+var md5 = require('md5');
+const session = require('express-session');
+const passport = require("passport");
+const passportLocalMongoose = require("passport-local-mongoose");
 
 const app = express();
 
 app.set('view engine', 'ejs');
 
 app.use(bodyParser.urlencoded({extended: true}));
+
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://localhost:27018/blogDB", {useNewUrlParser: true, useUnifiedTopology: true});
+app.use(session({
+  secret:"keyboardCat 1234",
+  resave:false,
+  saveUninitialized: false
+}))
 
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+
+mongoose.connect("mongodb://localhost:27018/blogDB", {useNewUrlParser: true, useUnifiedTopology: true});
+mongoose.set("useCreateIndex", true);
 const postSchema = {
   title: String,
   content: String,
   type: String
 };
 
+const userSchema = new mongoose.Schema ({
+  email: String,
+  password: String,})
+
+
 const Post = mongoose.model("Post", postSchema);
+
+
+userSchema.plugin(passportLocalMongoose);
+const User = new mongoose.model("User", userSchema);
+
+
+passport.use(User.createStrategy());
+
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+  User.findById(id, function(err, user) {
+    done(err, user);
+  });
+});
+
+
+app.get("/register", function(req, res){
+  res.render("register")
+})
+
+
+app.post("/register", function(req, res){
+
+User.register({username:req.body.username}, req.body.password, function (err, user){
+  if (err){console.log(err)}
+  else{passport.authenticate('local')(req, res, function(){res.redirect("/blogmenu")})}
+})
+
+});
+
+
+
 
 
 app.get("/", function(req, res){
@@ -61,11 +117,31 @@ app.get("/login", function(req, res){
   res.render("login")
 })
 
+app.post("/login", function (req, res){
+
+  const user = new User({
+    username: req.body.username,
+    password: req.body.password
+  });
+
+  req.login(user, function (err){
+    if (err){
+      console.log(err)
+    }
+    else {passport.authenticate("local")(req, res, function(){
+      res.redirect("/blogmenu")
+    })}
+  })
+})
+
+
 app.get("/compose", function(req,res){
-  res.render("compose")
+  if (req.isAuthenticated()){  res.render("compose")}
+else(res.redirect("/login"))
 })
 
 app.post("/compose", function(req, res){
+  if (req.isAuthenticated()){
   const post = new Post({
     title: req.body.postTitle,
     content: req.body.postBody,
@@ -75,23 +151,27 @@ app.post("/compose", function(req, res){
 
   post.save(function(err){
     if (!err){
-        res.redirect("/");
+
+        res.redirect("/compose");
     }
-  });
+  })}
+  else(res.redirect("/login"))
 });
 
 
 app.get("/delete", function (req,res){
-
+if (req.isAuthenticated()){
   Post.find({}, function(err, posts){
     res.render("delete", {
 
       posts: posts
       });
-})
+})}
+else(res.redirect("/login"))
 });
 
 app.post("/delete", function (req,res){
+  if (req.isAuthenticated()){
   const checkedBox=req.body.checkbox
   var i;
 for (i = 0; i < checkedBox.length; i++) {
@@ -104,15 +184,17 @@ for (i = 0; i < checkedBox.length; i++) {
   }
 // )
   res.redirect("/delete")
-})
+}
+else(res.redirect("/login"))})
 
 app.get("/edit", function (req,res){
+    if (req.isAuthenticated()){
   Post.find({}, function(err, posts){
     res.render("edit", {
 
       posts: posts
       });
-})
+})}
 });
 
 app.get("/posts/:postId", function(req, res){
@@ -122,16 +204,76 @@ const requestedPostId = req.params.postId;
   Post.findOne({_id: requestedPostId}, function(err, post){
     res.render("post", {
       title: post.title,
-      content: post.content
+      content: post.content,
+
     });
   });
 
 });
 
 
-app.get("/blogmenu", function (req,res){
-  res.render("blogmenu")
+app.post("/edits/:postId", function(req, res){
+
+const requestedPostId = req.params.postId;
+console.log(requestedPostId)
+if (req.isAuthenticated()){
+// const post = new Post({
+//   title: req.body.postTitle,
+//   content: req.body.postBody,
+//   type: req.body.type
+// });
+
+  var newvalues = { $set: {title: req.body.postTitle, content: req.body.postBody, type:req.body.type } };
+// post.updateOne({_id:requestedPostId, newvalues},function(err){
+Post.updateOne({_id:requestedPostId, newvalues},function(err){
+  if (!err){
+
+      res.redirect("/edit");
+  }
+})}
+else(res.redirect("/login"))
+
+});
+
+
+
+//nog updaten, update one?
+app.get("/edits/:postId", function(req, res){
+  if (req.isAuthenticated()){
+const requestedPostId = req.params.postId;
+
+  Post.findOne({_id: requestedPostId}, function(err, post){
+    res.render("editing", {
+      title: post.title,
+      content: post.content,
+      type:post.type,
+      ident:post._id
+    });console.log(post.type)
+  });
+
+}
+else(res.redirect("/login"))});
+
+
+app.post("/update", function (req,res){
+  console.log("hello")
 })
+
+
+app.get("/blogmenu", function (req,res){
+    if (req.isAuthenticated()){
+  res.render("blogmenu")}
+  else(res.redirect(""))
+})
+
+
+//authentication
+// const user = new User({
+//   username: req.body.username,
+//   password: req.body.password
+// });
+
+
 
 
 app.listen(3000, function() {
